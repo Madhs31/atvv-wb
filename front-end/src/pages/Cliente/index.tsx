@@ -68,13 +68,6 @@ const Cliente: React.FC = () => {
       <div className="container-cli-pro-ser">
         <h2>Clientes</h2>
         <div className="search-session">
-          <input
-            type="text"
-            placeholder="Buscar por nome ou CPF"
-            value={filtro}
-            onChange={handleSearchChange}
-            className="input-busca"
-          />
           <Link to={"/cadastrocliente"} style={{ color: "inherit" }}>
             <div className="button-cadastro">
               <span>Cadastrar Cliente</span>

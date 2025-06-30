@@ -90,6 +90,35 @@
   transform: translateY(-3px);
 }
 
+.input-genero {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 17px;
+  border-radius: 15px;
+  border: 2.5px solid transparent;
+  background-color: #f8f6ff;
+  box-shadow: inset 0 3px 6px rgba(189, 173, 234, 0.3);
+  font-weight: 500;
+  transition: all 0.35s ease;
+  margin-bottom: 18px;
+  font-family: 'Poppins', sans-serif;
+  color: #4b2d8f;
+  appearance: none; /* Remove seta padrão */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3csvg%20width%3d%2210%22%20height%3d%227%22%20viewBox%3d%220%200%2010%207%22%20xmlns%3d%22http%3a//www.w3.org/2000/svg%22%3e%3cpath%20d%3d%22M0%200l5%207%205-7z%22%20fill%3d%22%234b2d8f%22/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 10px 7px;
+  cursor: pointer;
+}
+
+.input-genero:focus {
+  outline: none;
+  border-color: #7e22ce;
+  background-color: #f0e8ff;
+  box-shadow: 0 0 12px rgba(126, 34, 206, 0.7);
+}
+
+
 /* Responsividade */
 @media (max-width: 768px) {
   .container-cadastro {
