@@ -1,6 +1,6 @@
 # 💅 World Beauty - Front-End
 
-Este é o front-end da aplicação **World Beauty**, desenvolvido com **React**, **TypeScript**, **Vite** e **Tailwind CSS**. Esta interface permite o gerenciamento visual de clientes, produtos e consumo de serviços oferecidos pelo grupo.
+Este é o front-end da aplicação **World Beauty**, desenvolvido com **React**, **TypeScript**, **Vite** e **Tailwind CSS**. Esta interface permite o gerenciamento visual de clientes, produtos e consumo de serviços.
 
 ## 🚀 Tecnologias Utilizadas
 
