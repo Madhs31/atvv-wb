@@ -1,162 +1,221 @@
-// ProdutoServico.tsx
-import React, { useState } from "react"; // Importe useState
+import React, { useEffect, useState } from "react";
 import "./style.css";
-
-interface Cliente {
-  id: number;
-  nome: string;
-  cpf: string;
-  produto: string;
-  servico: string;
-  genero?: string;
-}
-
-interface ProdutoServico {
-  nome: string;
-  quantidade: string;
-  genero?: string;
-}
+import { Link } from "react-router-dom";
 
 const EstatisticaPage: React.FC = () => {
-  // Use useState para gerenciar cada parte do estado
-  const [clientesMaisConsumiramQnt] = useState<Cliente[]>([
-    { id: 1, nome: "João Silva", cpf: "123.456.789-00", produto: "34", servico: "18" },
-    { id: 2, nome: "Teste da Silva", cpf: "123.456.092-00", produto: "23", servico: "11" },
-    { id: 3, nome: "Ana Maria", cpf: "321.456.789-99", produto: "20", servico: "14" },
-    { id: 4, nome: "Carlos Souza", cpf: "444.555.666-00", produto: "19", servico: "10" },
-  ]);
+  const [estatisticas, setEstatisticas] = useState<any[]>([]);
+  const [filtroAtivo, setFiltroAtivo] = useState<"produto" | "servico" | null>(
+    null
+  );
+  const [ordemProduto, setOrdemProduto] = useState<
+    "Ascendente" | "Descrescente"
+  >("Descrescente");
+  const [ordemServico, setOrdemServico] = useState<
+    "Ascendente" | "Descrescente"
+  >("Descrescente");
+  const [maisConsumidos, setMaisConsumidos] = useState<{
+    produtos: { id: string; nome: string; quantidade: number }[];
+    servicos: { id: string; nome: string; quantidade: number }[];
+  }>({ produtos: [], servicos: [] });
 
-  const [clientesMenosConsumiramQnt] = useState<Cliente[]>([
-    { id: 5, nome: "José Lima", cpf: "555.444.333-00", produto: "1", servico: "0" },
-    { id: 6, nome: "Clara Gomes", cpf: "111.222.333-44", produto: "2", servico: "1" },
-    { id: 7, nome: "Renata Silva", cpf: "999.888.777-66", produto: "3", servico: "2" },
-  ]);
-
-  const [clientesMaisConsumiramValor] = useState<Cliente[]>([
-    { id: 1, nome: "João Silva", cpf: "123.456.789-00", produto: "R$ 4040,99", servico: "R$ 1200,99" },
-    { id: 2, nome: "Teste da Silva", cpf: "123.456.092-00", produto: "R$ 3900,89", servico: "R$ 900,99" },
-    { id: 3, nome: "Ana Maria", cpf: "321.456.789-99", produto: "R$ 3100,00", servico: "R$ 1000,00" },
-    { id: 4, nome: "Carlos Souza", cpf: "444.555.666-00", produto: "R$ 2500,00", servico: "R$ 500,00" },
-    { id: 5, nome: "Fernanda Lopes", cpf: "333.222.111-00", produto: "R$ 2000,00", servico: "R$ 800,00" },
-  ]);
-
-  const [clientesPorGenero] = useState<Cliente[]>([
-    { id: 1, nome: "João Silva", cpf: "123.456.789-00", produto: "34", servico: "18", genero: "Masculino" },
-    { id: 2, nome: "Ana Maria", cpf: "321.456.789-99", produto: "20", servico: "14", genero: "Feminino" },
-    { id: 3, nome: "Carlos Souza", cpf: "444.555.666-00", produto: "19", servico: "10", genero: "Masculino" },
-    { id: 4, nome: "Renata Silva", cpf: "999.888.777-66", produto: "3", servico: "2", genero: "Feminino" },
-  ]);
-
-  const [produtosMaisConsumidos] = useState<ProdutoServico[]>([
-    { nome: "Sérum Iluminador com Pérolas de Ouro", quantidade: "100" },
-    { nome: "Creme Anti-Idade com Peptídeos Inteligentes", quantidade: "88", genero: "Feminino" },
-    { nome: "Shampoo Detox com Carvão Vegetal", quantidade: "75", genero: "Masculino" },
-    { nome: "Leave-in Reconstrutor com Queratina", quantidade: "70" },
-  ]);
-
-  const [servicosMaisConsumidos] = useState<ProdutoServico[]>([
-    { nome: "Hidratação Facial com Máscara de Ouro", quantidade: "85" },
-    { nome: "Massagem Relaxante com Aromaterapia", quantidade: "65", genero: "Feminino" },
-    { nome: "Design de Barba com Toalha Quente", quantidade: "50", genero: "Masculino" },
-    { nome: "Peeling de Diamante com Clareamento", quantidade: "40" },
-  ]);
+  useEffect(() => {
+    fetch("http://localhost:3001/estatisticas/consumo")
+      .then((res) => res.json())
+      .then(setEstatisticas)
+      .catch((err) => {
+        console.error("Erro ao buscar estatísticas:", err);
+        alert("Erro ao carregar estatísticas");
+      });
+  }, []);
+  useEffect(() => {
+    fetch("http://localhost:3001/estatisticas/produtos-servicos")
+      .then((res) => res.json())
+      .then(setMaisConsumidos)
+      .catch((err) => console.error("Erro ao buscar mais consumidos:", err));
+  }, []);
 
   return (
     <div className="container-estatisticas">
-      <h2>Estatísticas e Listagens</h2>
+      <div className="header-estatisticas">
+        <h2>Estatísticas e Listagens</h2>
+        <Link to={"/registrarconsumo"}>
+          <button className="consumir-button">
+            <span>Consumir Produtos ou Servicos</span>
+          </button>
+        </Link>
+      </div>
 
-      {/* Top 10 por quantidade */}
       <div className="title-top-10">
-        <p>Top 10 clientes que mais consumiram <b>em quantidade</b>.</p>
+        <p>
+          10 clientes que mais consumiram produtos ou serviços,{" "}
+          <b>em quantidade.</b>
+        </p>
       </div>
-      <TableComponent clientes={clientesMaisConsumiramQnt} />
+      <div className="table-component-listagem" role="region" tabIndex={0}>
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>CPF</th>
+              <th>
+                <div className="dropdown-filter">
+                  Produtos
+                  <select
+                    className="genero-dropdown"
+                    value={filtroAtivo === "produto" ? ordemProduto : ""}
+                    onChange={(e) => {
+                      setFiltroAtivo("produto");
+                      setOrdemProduto(
+                        e.target.value as "Ascendente" | "Descrescente"
+                      );
+                    }}
+                  >
+                    <option value="">--</option>
+                    <option value="Ascendente">Ascendente</option>
+                    <option value="Descrescente">Descrescente</option>
+                  </select>
+                </div>
+              </th>
+              <th>
+                <div className="dropdown-filter">
+                  Serviços
+                  <select
+                    className="genero-dropdown"
+                    value={filtroAtivo === "servico" ? ordemServico : ""}
+                    onChange={(e) => {
+                      setFiltroAtivo("servico");
+                      setOrdemServico(
+                        e.target.value as "Ascendente" | "Descrescente"
+                      );
+                    }}
+                  >
+                    <option value="">--</option>
+                    <option value="Ascendente">Ascendente</option>
+                    <option value="Descrescente">Descrescente</option>
+                  </select>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {estatisticas
+              .slice()
+              .sort((a, b) => {
+                if (filtroAtivo === "produto") {
+                  return ordemProduto === "Ascendente"
+                    ? a.quantidadeProduto - b.quantidadeProduto
+                    : b.quantidadeProduto - a.quantidadeProduto;
+                }
 
-      {/* Menor consumo por quantidade */}
-      <div className="title-top-10">
-        <p>10 clientes que menos consumiram <b>em quantidade</b>.</p>
+                if (filtroAtivo === "servico") {
+                  return ordemServico === "Ascendente"
+                    ? a.quantidadeServico - b.quantidadeServico
+                    : b.quantidadeServico - a.quantidadeServico;
+                }
+                return (
+                  b.quantidadeProduto +
+                  b.quantidadeServico -
+                  (a.quantidadeProduto + a.quantidadeServico)
+                );
+              })
+              .map((cliente) => (
+                <tr key={cliente.id}>
+                  <td>{cliente.nome}</td>
+                  <td>{cliente.cpf}</td>
+                  <td>{cliente.quantidadeProduto}</td>
+                  <td>{cliente.quantidadeServico}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
       </div>
-      <TableComponent clientes={clientesMenosConsumiramQnt} />
 
-      {/* Por valor */}
       <div className="title-top-10-valor">
-        <p>Top 5 clientes que mais consumiram <b>em valor</b>.</p>
+        <p>
+          Listagem dos 5 clientes que mais consumiram <b>em valor</b> (soma).
+        </p>
       </div>
-      <TableComponent clientes={clientesMaisConsumiramValor} />
 
-      {/* Por gênero */}
-      <div className="title-top-10-valor">
-        <p>Clientes agrupados por <b>gênero</b>.</p>
+      <div className="table-component-listagem" role="region" tabIndex={0}>
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>CPF</th>
+              <th>Produtos</th>
+              <th>Serviços</th>
+            </tr>
+          </thead>
+          <tbody>
+            {estatisticas
+              .sort(
+                (a, b) =>
+                  b.valorProduto +
+                  b.valorServico -
+                  (a.valorProduto + a.valorServico)
+              )
+              .slice(0, 5)
+              .map((cliente) => (
+                <tr key={cliente.id}>
+                  <td>{cliente.nome}</td>
+                  <td>{cliente.cpf}</td>
+                  <td>R$ {cliente.valorProduto.toFixed(2)}</td>
+                  <td>R$ {cliente.valorServico.toFixed(2)}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
       </div>
-      <TableComponent clientes={clientesPorGenero} />
 
-      {/* Produtos mais consumidos */}
       <div className="title-top-10-valor">
-        <p>Produtos mais consumidos <b>(geral e por gênero)</b>.</p>
+        <p>Top 5 produtos mais consumidos:</p>
       </div>
-      <SimpleTable data={produtosMaisConsumidos} tipo="Produto" />
+      <div className="table-component-listagem" role="region" tabIndex={0}>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Quantidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            {maisConsumidos.produtos.map((p) => (
+              <tr key={p.id}>
+                <td>{p.id}</td>
+                <td>{p.nome}</td>
+                <td>{p.quantidade}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      {/* Serviços mais consumidos */}
       <div className="title-top-10-valor">
-        <p>Serviços mais consumidos <b>(geral e por gênero)</b>.</p>
+        <p>Top 5 serviços mais consumidos:</p>
       </div>
-      <SimpleTable data={servicosMaisConsumidos} tipo="Serviço" />
+      <div className="table-component-listagem" role="region" tabIndex={0}>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Quantidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            {maisConsumidos.servicos.map((s) => (
+              <tr key={s.id}>
+                <td>{s.id}</td>
+                <td>{s.nome}</td>
+                <td>{s.quantidade}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
-
-// TableComponent e SimpleTable já são componentes de função, então não precisam de modificação.
-function TableComponent({ clientes }: { clientes: Cliente[] }) {
-  return (
-    <div className="table-component-listagem" role="region" tabIndex={0}>
-      <table>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>CPF</th>
-            {clientes[0]?.genero && <th>Gênero</th>}
-            <th>Produtos</th>
-            <th>Serviços</th>
-          </tr>
-        </thead>
-        <tbody>
-          {clientes.map((cliente) => (
-            <tr key={cliente.id}>
-              <td>{cliente.nome}</td>
-              <td>{cliente.cpf}</td>
-              {cliente.genero && <td>{cliente.genero}</td>}
-              <td>{cliente.produto}</td>
-              <td>{cliente.servico}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function SimpleTable({ data, tipo }: { data: ProdutoServico[]; tipo: string }) {
-  return (
-    <div className="table-component-listagem" role="region" tabIndex={0}>
-      <table>
-        <thead>
-          <tr>
-            <th>{tipo}</th>
-            <th>Quantidade</th>
-            {data[0]?.genero && <th>Gênero</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, i) => (
-            <tr key={i}>
-              <td>{item.nome}</td>
-              <td>{item.quantidade}</td>
-              {item.genero && <td>{item.genero}</td>}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
 
 export default EstatisticaPage;

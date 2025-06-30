@@ -261,3 +261,7 @@ app.get("/estatisticas/produtos-servicos", async (req, res) => {
 app.listen(3001, () => {
   console.log("API rodando em http://localhost:3001");
 });
+
+app.get('/', (req, res) => {
+  res.send('API está rodando 🚀');
+});
