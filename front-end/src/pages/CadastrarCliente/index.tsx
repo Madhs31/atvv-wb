@@ -1,37 +1,33 @@
-import React, { useState } from "react";
-import api from "../../services/api";
+import { useState } from "react";
 import "./style.css";
 
-const CadastroCliente: React.FC = () => {
-  const [nome, setNome] = useState("");
-  const [nomeSocial, setNomeSocial] = useState("");
-  const [genero, setGenero] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [rg, setRg] = useState("");
-  const [telefone, setTelefone] = useState("");
+const CadastroCliente = () => {
+  const [form, setForm] = useState({
+    nome: "",
+    nomeSocial: "",
+    genero: "",
+    cpf: "",
+    rg: "",
+    telefone: "",
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-      await api.post("/clientes", {
-        nome,
-        nomeSocial,
-        genero,
-        cpf,
-        rg,
-        telefone,
+      const response = await fetch("http://localhost:3001/clientes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
       });
-
+      const data = await response.json();
       alert("Cliente cadastrado com sucesso!");
-
-      // Limpa os campos
-      setNome("");
-      setNomeSocial("");
-      setGenero("");
-      setCpf("");
-      setRg("");
-      setTelefone("");
+      console.log(data);
     } catch (error) {
       console.error(error);
       alert("Erro ao cadastrar cliente.");
@@ -41,28 +37,63 @@ const CadastroCliente: React.FC = () => {
   return (
     <div className="container-cadastro">
       <div className="title-cadastro">
-        <h2>Cadastre um usuário</h2>
+        <h2>Cadastre um usuario</h2>
       </div>
       <div className="form-cadastro">
         <form onSubmit={handleSubmit}>
           <p>Nome:</p>
-          <input type="text" placeholder="Digite o nome do cliente" value={nome} onChange={e => setNome(e.target.value)} />
-
+          <input
+            name="nome"
+            type="text"
+            placeholder="Digite o nome do cliente"
+            onChange={handleChange}
+            required
+          />
           <p>Nome Social:</p>
-          <input type="text" placeholder="Digite o nome social do cliente" value={nomeSocial} onChange={e => setNomeSocial(e.target.value)} />
-
+          <input
+            name="nomeSocial"
+            type="text"
+            placeholder="Digite o nome social do cliente"
+            onChange={handleChange}
+            required
+          />
           <p>Gênero:</p>
-          <input type="text" placeholder="Digite o gênero do cliente" value={genero} onChange={e => setGenero(e.target.value)} />
+          <select
+            name="genero"
+            value={form.genero}
+            onChange={handleChange}
+            className="input-genero"
+            required
+          >
+            <option value="">Selecione o gênero</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Feminino">Feminino</option>
+          </select>
 
           <p>CPF:</p>
-          <input type="text" placeholder="Digite o CPF do cliente" value={cpf} onChange={e => setCpf(e.target.value)} />
-
+          <input
+            name="cpf"
+            type="text"
+            placeholder="Digite o CPF do cliente"
+            onChange={handleChange}
+            required
+          />
           <p>RG:</p>
-          <input type="text" placeholder="Digite o RG do cliente" value={rg} onChange={e => setRg(e.target.value)} />
-
+          <input
+            name="rg"
+            type="text"
+            placeholder="Digite o RG do cliente"
+            onChange={handleChange}
+            required
+          />
           <p>Telefone:</p>
-          <input type="text" placeholder="Digite o telefone do cliente" value={telefone} onChange={e => setTelefone(e.target.value)} />
-
+          <input
+            name="telefone"
+            type="text"
+            placeholder="Digite o telefone do cliente"
+            onChange={handleChange}
+            required
+          />
           <button type="submit">Cadastrar</button>
         </form>
       </div>
