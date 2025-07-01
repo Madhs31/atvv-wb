@@ -1,15 +1,14 @@
 # 💅 World Beauty - Back-End
 
-Este é o front-end da aplicação **World Beauty**, desenvolvido com **React**, **TypeScript**, **Vite** e **Tailwind CSS**. Esta interface permite o gerenciamento visual de clientes, produtos e consumo de serviço.
+Este repositório contém a implementação do back-end da aplicação **World Beauty**, desenvolvida como parte da Atividade Prática da disciplina ATVIV. O objetivo principal deste projeto é gerenciar clientes, produtos e o consumo de serviços, utilizando uma arquitetura RESTful.
 
 ## 🚀 Tecnologias Utilizadas
 
-- [Node.js](https://nodejs.org/)
-- [Express](https://expressjs.com/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Prisma ORM](https://www.prisma.io/)
-- [MySQL](https://www.mysql.com/)
-- [Dotenv](https://www.npmjs.com/package/dotenv)
+- **Node.js** com **TypeScript**
+- **Express.js** para criação da API REST
+- **Prisma ORM** para interação com o banco de dados
+- **MySQL** como banco de dados relacional
+- **Dotenv** para gerenciamento de variáveis de ambiente
 
 ## ⚙️ Instalação e Execução
 
@@ -19,31 +18,29 @@ Este é o front-end da aplicação **World Beauty**, desenvolvido com **React**,
 - MySQL instalado
 - Banco de dados `world_beauty` criado
 
-### Passos:
+## Como Executar
 
-# Acesse a pasta do back-end
+### Navegue até o diretório do back-end:
 ```bash
-cd back-end
+cd atvv-wb/back-end
 ```
 
-# Instale as dependências
+### Instale as dependências:
 ```bash
 npm install
 ```
 
-# Configure as variáveis de ambiente
+### Crie um arquivo .env na raiz do projeto com as seguintes variáveis (Substitua usuario e senha pelos dados do seu banco de dados MySQL.):
 ```bash
-cp .env.example .env
-# edite o .env com sua string de conexão:
-# DATABASE_URL="mysql://usuario:senha@localhost:3306/world_beauty"
+DATABASE_URL="mysql://usuario:senha@localhost:3306/world_beauty"
 ```
 
-# Configure o banco
+### Execute as migrações do Prisma para configurar o banco de dados:
 ```bash
-npx prisma db push
+npx prisma migrate dev
 ```
 
-# Inicie o servidor
+### Inicie o servidor:
 ```bash
 npm run dev
 ```
