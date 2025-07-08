@@ -4,11 +4,16 @@ Este repositório contém a implementação do back-end da aplicação **World B
 
 ## 🚀 Tecnologias Utilizadas
 
-- **Node.js** com **TypeScript**
-- **Express.js** para criação da API REST
-- **Prisma ORM** para interação com o banco de dados
-- **MySQL** como banco de dados relacional
-- **Dotenv** para gerenciamento de variáveis de ambiente
+| Tecnologia          | Versão Exata     |
+|---------------------|------------------|
+| Node.js             | v24.0.0          |
+| TypeScript          | 5.8.3            |
+| Express.js          | 5.1.0            |
+| Prisma ORM          | 6.10.1           |
+| MySQL               | —                |
+| CORS                | 2.8.5            |
+| TSX                 | 4.20.3           |
+| ESLint              | 9.25.0           |
 
 ## ⚙️ Instalação e Execução
 
